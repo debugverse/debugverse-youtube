@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Blog Posts</title>
+</head>
+
+<body>
+    <h1>Blog Posts</h1>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content[:50] }}...</p>
+            <p>Tags: {{ post.tags | join(', ') }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
