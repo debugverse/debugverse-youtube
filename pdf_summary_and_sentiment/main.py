@@ -3,6 +3,11 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 
+# Code downloaded from Debugverse tutorials
+# https://www.youtube.com/@DebugVerseTutorials
+
+
+
 class Result(BaseModel):
     """Sentiment result"""
     sentiment: str = Field(description="One sentence summary of the sentiment of the report")

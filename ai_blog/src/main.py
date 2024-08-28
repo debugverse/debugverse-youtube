@@ -8,6 +8,11 @@ from pydantic import ValidationError
 from typing import List
 from fastapi.templating import Jinja2Templates
 
+
+# Code downloaded from Debugverse tutorials
+# https://www.youtube.com/@DebugVerseTutorials
+
+
 load_dotenv()
 
 app = FastAPI()
