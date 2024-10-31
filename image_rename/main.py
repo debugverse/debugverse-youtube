@@ -5,6 +5,11 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
+####################
+# Code by Debugverse
+# https://www.youtube.com/@DebugVerseTutorials
+####################
+
 load_dotenv()
 
 

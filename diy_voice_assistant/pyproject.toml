@@ -1,0 +1,14 @@
+[project]
+name = "voice-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.4",
+    "langchain-ollama>=0.2.0",
+    "openai>=1.53.0",
+    "openai-whisper>=20240930",
+    "uvicorn>=0.32.0",
+    "python-multipart>=0.0.17",
+]

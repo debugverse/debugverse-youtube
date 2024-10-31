@@ -5,6 +5,11 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.document_transformers import EmbeddingsClusteringFilter
 from langchain.embeddings import HuggingFaceBgeEmbeddings
 
+####################
+# Code by Debugverse
+# https://www.youtube.com/@DebugVerseTutorials
+####################
+
 
 def extract(file_path):
     loader = PyPDFLoader(file_path)

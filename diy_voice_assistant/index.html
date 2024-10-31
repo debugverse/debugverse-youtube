@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Voice Assistant</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+        <h1 class="mb-4 text-center">DIY Voice Assistant</h1>
+        
+        <!-- Recording Button -->
+        <button id="recordButton" class="btn btn-primary btn-lg mb-3">Start Recording</button>
+        
+        <!-- Status Text -->
+        <p id="status" class="text-muted mb-4">Press the button to start recording.</p>
+        
+        <!-- Response Audio Player -->
+        <audio id="responseAudio" controls class="w-100" style="display: none;"></audio>
+    </div>
+
+    <!-- JavaScript and Bootstrap JS CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let isRecording = false;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        const recordButton = document.getElementById('recordButton');
+        const statusText = document.getElementById('status');
+        const responseAudio = document.getElementById('responseAudio');
+
+        recordButton.addEventListener('click', async () => {
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                recordButton.textContent = 'Stop Recording';
+                recordButton.classList.replace('btn-primary', 'btn-danger');
+                statusText.textContent = 'Recording...';
+                
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        statusText.textContent = 'Processing...';
+                        
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const formData = new FormData();
+                        formData.append('audio', audioBlob, 'recording.webm');
+
+                        try {
+                            const response = await fetch('http://localhost:8000/process_audio', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            if (response.ok) {
+                                const audioUrl = URL.createObjectURL(await response.blob());
+                                responseAudio.src = audioUrl;
+                                responseAudio.style.display = 'block';
+                                responseAudio.play();
+                                statusText.textContent = 'Response received and playing back.';
+                            } else {
+                                statusText.textContent = 'Error processing audio.';
+                            }
+                        } catch (error) {
+                            console.error('Error sending audio to API:', error);
+                            statusText.textContent = 'Error connecting to API.';
+                        }
+                    };
+
+                    audioChunks = [];
+                    mediaRecorder.start();
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    statusText.textContent = 'Microphone access denied.';
+                }
+            } else {
+                // Stop recording
+                isRecording = false;
+                recordButton.textContent = 'Start Recording';
+                recordButton.classList.replace('btn-danger', 'btn-primary');
+                statusText.textContent = 'Stopped recording.';
+                mediaRecorder.stop();
+            }
+        });
+    </script>
+</body>
+</html>

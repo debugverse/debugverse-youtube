@@ -2,6 +2,11 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QTextEdit, QLabel, QFileDialog
 import mlx_whisper
 
+####################
+# Code by Debugverse
+# https://www.youtube.com/@DebugVerseTutorials
+####################
+
 class TranscriptionApp(QWidget):
     def __init__(self):
         super().__init__()
